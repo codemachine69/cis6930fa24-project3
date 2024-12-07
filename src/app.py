@@ -58,7 +58,6 @@ def visualize_data(df):
     # CLustering incidents by hour and type
     st.subheader("Clustering Incidents by Hour and Type")
 
-    # Ensure incident_time is in datetime format
     df['incident_time'] = pd.to_datetime(df['incident_time'], errors='coerce')
     df['hour'] = df['incident_time'].dt.hour  # Extract hour from incident_time
 
@@ -94,7 +93,7 @@ def visualize_data(df):
     )
     st.plotly_chart(fig)
 
-    # Bar Graph Comparison
+    # Bar Graph 
     st.subheader("Incident Nature Frequency")
     nature_counts = df['nature'].value_counts()
     fig2, ax2 = plt.subplots(figsize=(12, 8))
@@ -102,7 +101,7 @@ def visualize_data(df):
     ax2.set_yticklabels(ax2.get_yticklabels(), fontsize=8)
     st.pyplot(fig2)
 
-    # Line Graph of Incidents by Hour
+    # Line Graph 
     st.subheader("Number of Incidents by Hour")
     df['incident_time'] = pd.to_datetime(df['incident_time'], errors='coerce')
     df['hour'] = df['incident_time'].dt.hour

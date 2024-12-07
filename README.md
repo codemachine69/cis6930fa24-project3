@@ -51,7 +51,7 @@ The application will extract data from the file and display visualizations.
 
 3. Visualize Data:
 
-   The application generates three types of visualizations:
+   The application generates four types of visualizations:
 
    - Clustering of Incident Locations: Groups incidents based on hashed location values using KMeans clustering.
    - Clustering Incidents by Hour and Type: Groups incidents based on the hour of occurrence and their type (nature).
