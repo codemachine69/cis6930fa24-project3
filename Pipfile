@@ -9,6 +9,7 @@ pypdf = "*"
 matplotlib = "*"
 plotly = "*"
 scikit-learn = "*"
+pytest = "*"
 
 [dev-packages]
 

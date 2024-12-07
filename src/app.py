@@ -3,6 +3,9 @@ import pandas as pd
 from pypdf import PdfReader
 import plotly.express as px
 from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
 import matplotlib.pyplot as plt
 import urllib.request
 import io
@@ -51,6 +54,45 @@ def visualize_data(df):
         df['cluster'] = kmeans.fit_predict(df[['location_hash']])
         fig1 = px.scatter(df, x='location_hash', y='incident_time', color='cluster', title="Incident Location Clusters")
         st.plotly_chart(fig1)
+        
+    # CLustering incidents by hour and type
+    st.subheader("Clustering Incidents by Hour and Type")
+
+    # Ensure incident_time is in datetime format
+    df['incident_time'] = pd.to_datetime(df['incident_time'], errors='coerce')
+    df['hour'] = df['incident_time'].dt.hour  # Extract hour from incident_time
+
+    # Select features for clustering: 'hour' and 'nature'
+    features = df[['hour', 'nature']]
+
+    # Preprocessing pipeline: scale 'hour' and one-hot encode 'nature'
+    preprocessor = ColumnTransformer(
+        transformers=[
+            ('scale', StandardScaler(), ['hour']),
+            ('onehot', OneHotEncoder(), ['nature'])
+        ]
+    )
+
+    # KMeans clustering pipeline
+    pipeline = Pipeline([
+        ('preprocessor', preprocessor),
+        ('kmeans', KMeans(n_clusters=5, random_state=42))
+    ])
+
+    # Fit the pipeline and predict clusters
+    df['cluster'] = pipeline.fit_predict(features)
+
+    # Visualize clusters using Plotly scatter plot
+    fig = px.scatter(
+        df,
+        x='hour',
+        y='nature',
+        color='cluster',
+        title="Clustering Incidents by Hour and Type",
+        labels={'hour': 'Hour of Day', 'nature': 'Incident Type'},
+        hover_data=['incident_location', 'incident_number']
+    )
+    st.plotly_chart(fig)
 
     # Bar Graph Comparison
     st.subheader("Incident Nature Frequency")
